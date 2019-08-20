@@ -5,6 +5,7 @@ class LRUCache:
     self.list = DoublyLinkedList()
     self.dict = {}
     self.limit = limit
+    self.size = 0
 
   """
   Retrieves the value associated with the given key. Also
@@ -35,4 +36,20 @@ class LRUCache:
   the newly-specified value. 
   """
   def set(self, key, value):
-    pass
+    if key in self.dict:
+      node = self.dict[key]
+      node.value = value
+      self.list.move_to_end(node)
+      return
+
+      #if self.list.head is not node:
+        #self.list.delete(node)
+        #self.list.add_to_head(node)
+        #new_node = DoublyLinkedList(value)
+    if self.size == self.limit:
+      self.dict.pop(key)
+      self.list.remove_from_head()
+      self.size -= 1
+    self.list.add_to_tail((key, value))
+    self.dict[key] = self.list.tail
+    self.size += 1
