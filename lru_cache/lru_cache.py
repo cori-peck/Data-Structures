@@ -1,26 +1,35 @@
+from doubly_linked_list import DoublyLinkedList
+
 class LRUCache:
   def __init__(self, limit=10):
-    pass
-
-  """
-  Retrieves the value associated with the given key. Also
-  needs to move the key-value pair to the top of the order
-  such that the pair is considered most-recently used.
-  Returns the value associated with the key or None if the
-  key-value pair doesn't exist in the cache. 
-  """
+    self.list = DoublyLinkedList()
+    self.cache = {}
+    self.limit = limit
+    
   def get(self, key):
-    pass
-
-  """
-  Adds the given key-value pair to the cache. The newly-
-  added pair should be considered the most-recently used
-  entry in the cache. If the cache is already at max capacity
-  before this entry is added, then the oldest entry in the
-  cache needs to be removed to make room. Additionally, in the
-  case that the key already exists in the cache, we simply 
-  want to overwrite the old value associated with the key with
-  the newly-specified value. 
-  """
+    if key in self.cache.keys():
+      node = self.list.head
+      while node.value != key:
+        node = node.next
+      self.list.move_to_end(node)
+      return self.cache[key]
+    else:
+      return None
+      
   def set(self, key, value):
-    pass
+    if len(self.cache.keys()) == 0:
+      self.cache[key] = value
+    elif key in self.cache.keys():
+      self.cache[key] = value
+      node = self.list.head
+      while node.value != key:
+        node = node.next
+      self.list.move_to_end(node)
+    elif len(self.cache.keys()) == self.limit:
+      del self.cache[self.list.head.value]
+      self.list.remove_from_head()
+      self.list.add_to_tail(key)
+      self.cache[key] = value
+    else:
+      self.list.add_to_tail(key)
+      self.cache[key] =value
